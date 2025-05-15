@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql 
+spec:
+  selector:
+    matchLabels:
+      app: mysql 
+  template:
+    metadata:
+      labels:
+        app: mysql 
+    spec:
+      containers:
+      - name: mysql 
+        image: mysql:5.6        
+        env: 
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: autobots-mysql
+                key: password
+        ports:
+        - containerPort: 3306
+        #we need to add volumes to the container 
+        volumeMounts:
+        - name: mysql-sc
+          mountPath: /var/lib/mysql #this is the path where the data will be stored
+        - name: mysql-config 
+          mountPath: /docker-entrypoint-initdb.d #this is the path where the data will be stored
+         
+      volumes:
+      - name: mysql-sc
+        persistentVolumeClaim:
+          claimName: energon-persistent-volume-claim #this is the name of the persistent volume claim
+      - name: mysql-config
+        configMap:
+          name: autobots-mysql-config #this is the name of the config map
+

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: energon-persistent-volume-claim
+spec:
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem
+  storageClassName: energonpersistentvolume
+  accessModes:
+    - ReadWriteOnce
+
